@@ -35,10 +35,10 @@ println  "${toolbelt}/sfdx"
             println 'Scratch Org authentication Done.......'
 	    if (rc != 0) { error 'Org authorization failed....' }
 	    println rc
-            printf 5
+            println 5
 	    rmsg = bat returnStdout: true, script: "sfdx force:org:list"
-            printf rmsg
-            printf 10
+            println rmsg
+            println 10
 	   
         }
     }
