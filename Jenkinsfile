@@ -35,20 +35,11 @@ println  "${toolbelt}/sfdx"
             println 'Scratch Org authentication Done.......'
 	    if (rc != 0) { error 'Org authorization failed....' }
 	    println rc
+            printf 5
 	    rmsg = bat returnStdout: true, script: "sfdx force:org:list"
             printf rmsg
             printf 10
-	    rmsg = bat returnStdout: true, script: "sfdx force:source:push -u demoSOrg -u test-47omgaladoqv@example.com"
-            printf rmsg
-            printf 20
-	    //rmsg = bat returnStdout: true, script: "sfdx force:mdapi:deploy -d manifest/. -u test-47omgaladoqv@example.com"
-            printf rmsg
-            printf 30
-	    rmsg = bat returnStdout: true, script: "sfdx force:org:open -u test-47omgaladoqv@example.com"
-            printf rmsg
-            printf 40
-            println('Deployment done....')
-            println(rmsg)
+	   
         }
     }
 }
