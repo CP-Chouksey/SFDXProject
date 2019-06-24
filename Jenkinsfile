@@ -45,7 +45,7 @@ def scratchOrg = 'demoSOrg4'
 	    if (rc != 0) { error 'SFDX Command failed....22' }
             println rc
             println 22
-	rc = bat returnStatus: true, script: "sfdx force:user:password:display --targetusername ${scratchOrg}"
+	rc = bat returnStatus: true, script: "sfdx force:user:display --targetusername ${scratchOrg}"
 	    if (rc != 0) { error 'SFDX Command failed....23' }
             println rc
             println 23
@@ -54,6 +54,11 @@ def scratchOrg = 'demoSOrg4'
 	    if (rc != 0) { error 'SFDX Command failed....4' }
             println rc
             println 40
+
+	rc = bat returnStatus: true, script: "sfdx force:org:list --all"
+	    if (rc != 0) { error 'SFDX Command failed....4' }
+            println rc
+            println 50
 
         }
     }
