@@ -27,6 +27,7 @@ def scratchOrg = 'demoSOrg4'
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Deploye Code') {
 	    println 'Running on Window.......'
+		/*
 	   rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
             //println 'DevHub authentication Done.......'
 
@@ -59,9 +60,9 @@ def scratchOrg = 'demoSOrg4'
 	    if (rc != 0) { error 'SFDX Command failed....4' }
             println rc
             println 50
+	    */
 	doError = '0'
         }
- 	agent any
     
     stages {
         stage('Error') {
