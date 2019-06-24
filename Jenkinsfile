@@ -34,7 +34,7 @@ node {
 	    println rc
             println 5
 	    
-	rc = bat returnStatus: true, script: "sfdx force:org:create -s -f config/project-scratch-def.json -a demoSOrg2"
+	rc = bat returnStatus: true, script: "sfdx force:org:create -s -f config/project-scratch-def.json -a demoSOrg3"
 	    if (rc != 0) { error 'SFDX Command failed....2' }
             println rc
             println 20
