@@ -38,10 +38,6 @@ node {
 	    if (rc != 0) { error 'SFDX Command failed....2' }
             println rc
             println 20
-	rc = bat returnStdout: true, script: "sfdx force:org:list"
-	    if (rc != 0) { error 'SFDX Command failed....3' }
-            println rc
-            println 30
 	rc = bat returnStatus: true, script: "sfdx force:source:push -u demoSOrg2"
 	    if (rc != 0) { error 'SFDX Command failed....4' }
             println rc
