@@ -16,6 +16,8 @@ node {
     println HUB_ORG
     println SFDC_HOST
     println CONNECTED_APP_CONSUMER_KEY
+	
+def scratchOrg = 'demoSOrg4'
 		    
    // stage('checkout source') {
         // when running in multi-branch job, one must issue this command
@@ -34,11 +36,21 @@ node {
 	    println rc
             println 5
 	    
-	rc = bat returnStatus: true, script: "sfdx force:org:create -s -f config/project-scratch-def.json -a demoSOrg3"
+	rc = bat returnStatus: true, script: "sfdx force:org:create -s -f config/project-scratch-def.json -a ${scratchOrg}"
 	    if (rc != 0) { error 'SFDX Command failed....2' }
             println rc
             println 20
-	rc = bat returnStatus: true, script: "sfdx force:source:push -u demoSOrg2"
+	
+	rc = bat returnStatus: true, script: "sfdx force:user:password:generate --targetusername ${scratchOrg}"
+	    if (rc != 0) { error 'SFDX Command failed....22' }
+            println rc
+            println 22
+	rc = bat returnStatus: true, script: "sfdx force:user:password:display --targetusername ${scratchOrg}"
+	    if (rc != 0) { error 'SFDX Command failed....23' }
+            println rc
+            println 23
+	
+	rc = bat returnStatus: true, script: "sfdx force:source:push -u ${scratchOrg}"
 	    if (rc != 0) { error 'SFDX Command failed....4' }
             println rc
             println 40
