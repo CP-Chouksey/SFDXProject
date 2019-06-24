@@ -23,7 +23,7 @@ def scratchOrg = 'demoSOrg4'
         // when running in multi-branch job, one must issue this command
         checkout scm
     }
-
+	def doError = '1'
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Deploye Code') {
 	    println 'Running on Window.......'
@@ -59,7 +59,41 @@ def scratchOrg = 'demoSOrg4'
 	    if (rc != 0) { error 'SFDX Command failed....4' }
             println rc
             println 50
-
+	doError = '0'
         }
+ 	agent any
+    
+    stages {
+        stage('Error') {
+            when {
+                expression { doError == '1' }
+            }
+            steps {
+                echo "Failure"
+                error "failure test. It's work"
+            }
+        }
+        
+        stage('Success') {
+            when {
+                expression { doError == '0' }
+            }
+            steps {
+                echo "ok"
+            }
+        }
+    }
+    post {
+        always {
+            echo 'I will always say Hello again!'
+            
+            emailext body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
+                subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
+            
+        }
+    }
+}	    
+	    
     }
 }
