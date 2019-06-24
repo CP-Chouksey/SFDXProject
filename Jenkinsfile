@@ -16,14 +16,11 @@ node {
     println HUB_ORG
     println SFDC_HOST
     println CONNECTED_APP_CONSUMER_KEY
-println  "SFDX:?" 
-    def toolbelt =  'toolbelt'
-println  "${toolbelt}/sfdx" 
 		    
-    stage('checkout source') {
+   // stage('checkout source') {
         // when running in multi-branch job, one must issue this command
-        checkout scm
-    }
+       // checkout scm
+    //}
 
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Deploye Code') {
@@ -38,18 +35,19 @@ println  "${toolbelt}/sfdx"
             println 5
 	    
 	rc = bat returnStdout: true, script: "sfdx force:org:list"
+	    if (rc != 0) { error 'SFDX Command failed....1' }
             println rc
             println 10
-	    if (rc != 0) { error 'SFDX Command failed....1' }
 	rc = bat returnStatus: true, script: "sfdx force:org:create -s -f config/project-scratch-def.json -a demoSOrg2"
+	    if (rc != 0) { error 'SFDX Command failed....2' }
             println rc
             println 20
-	    if (rc != 0) { error 'SFDX Command  failed....2' }
 	rc = bat returnStdout: true, script: "sfdx force:org:list"
+	    if (rc != 0) { error 'SFDX Command failed....3' }
             println rc
             println 30
-	if (rc != 0) { error 'SFDX Command  failed....3' }
 	rc = bat returnStatus: true, script: "sfdx force:source:push -u demoSOrg2"
+	    if (rc != 0) { error 'SFDX Command failed....4' }
             println rc
             println 40
 
