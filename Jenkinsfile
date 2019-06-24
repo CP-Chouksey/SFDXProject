@@ -2,6 +2,7 @@
 import groovy.json.JsonSlurperClassic
 
 node {
+    try {
 	
 	def BUILD_NUMBER=env.BUILD_NUMBER
 	def RUN_ARTIFACT_DIR="tests/${BUILD_NUMBER}"
@@ -80,4 +81,9 @@ node {
 			*/
 		}
 	}
+	} catch (err) {
+		echo "Caught: ${err}"
+		currentBuild.result = 'FAILURE'
+	}
+	step([$class: 'Mailer', recipients: 'chandra@comitydesigns.com'])
 }
