@@ -94,3 +94,4 @@ def scratchOrg = 'demoSOrg4'
         }
     }
 }
+}
