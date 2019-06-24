@@ -62,7 +62,7 @@ def scratchOrg = 'demoSOrg4'
             println 50
 	    */
 	doError = '0'
-		
+/*		
 def subject = "JENKINS-NOTIFICATION: : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'" 
 
 emailext(
@@ -76,6 +76,10 @@ emailext(
             compressLog: true,
             recipientProviders: [[$class: 'DevelopersRecipientProvider']]
     )
+    */
+		emailext body: "${DEFAULT_CONTENT}",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
+                subject: "${DEFAULT_SUBJECT}"
 	}
     }
 	
