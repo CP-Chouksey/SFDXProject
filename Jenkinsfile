@@ -32,19 +32,27 @@ println  "${toolbelt}/sfdx"
             //println 'DevHub authentication Done.......'
 
 	    //rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username test-47omgaladoqv@example.com --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl https://login.salesforce.com"
-            println 'Scratch Org authentication Done.......'
+            println 'Scratch Org authentication .......'
 	    if (rc != 0) { error 'Org authorization failed....' }
 	    println rc
             println 5
-	    rmsg = bat returnStdout: true, script: "sfdx force:org:list"
-            println rmsg
+	    
+	rc = bat returnStdout: true, script: "sfdx force:org:list"
+            println rc
             println 10
-	   rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username test-47omgaladoqv@example.com --jwtkeyfile \"${jwt_key_file}\" --setdefaultusername --instanceurl https://test.salesforce.com"
+	    if (rc != 0) { error 'SFDX Command failed....1' }
+	rc = bat returnStatus: true, script: "sfdx force:org:create -s -f config/project-scratch-def.json -a demoSOrg2"
+            println rc
             println 20
-	    if (rc != 0) { error 'Org authorization failed....' }
-	    println rc
+	    if (rc != 0) { error 'SFDX Command  failed....2' }
+	rc = bat returnStdout: true, script: "sfdx force:org:list"
+            println rc
             println 30
-	   
+	if (rc != 0) { error 'SFDX Command  failed....3' }
+	rc = bat returnStatus: true, script: "sfdx force:source:push -u demoSOrg2"
+            println rc
+            println 40
+
         }
     }
 }
