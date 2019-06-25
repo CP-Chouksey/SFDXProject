@@ -14,7 +14,6 @@ node {
 	def CONNECTED_APP_CONSUMER_KEY='3MVG9G9pzCUSkzZsSdhgqXxxIquAlA8lbmTnKPs7yzAQVbW3oxvTXDYn4Lwxkpp6VBBQAy8czDLVub72_b6K8'
 	def scratchOrg = 'demoSOrg4'
 	
-	println 'Build is in progress in org: ${scratchOrg}....'
 	
 	
 	
@@ -22,45 +21,40 @@ node {
 		// when running in multi-branch job, one must issue this command
 		checkout scm
 	}
-	doError = '1'
+	println 'Build is in progress in org: ${scratchOrg}....'
 	withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
 		stage('Deploye Code') {
 			println 'Running on Window.......'
 			
+			println 'DevHub authentication is in progress.......'
 			rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
-			//println 'DevHub authentication Done.......'
-			
-			//rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username test-47omgaladoqv@example.com --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl https://login.salesforce.com"
-			println 'Scratch Org authentication .......'
-			if (rc != 0) { error 'Org authorization failed....' }
+			if (rc != 0) { error 'DevHub Org authorization failed....10' }
 			println rc
-			println 5
 			
+			println 'Scratch org ${scratchOrg} creation is in progress.......'
 			rc = bat returnStatus: true, script: "sfdx force:org:create -s -f config/project-scratch-def.json -a ${scratchOrg}"
-			if (rc != 0) { error 'SFDX Command failed....2' }
+			if (rc != 0) { error 'SFDX Command failed....20' }
 			println rc
-			println 20
-			
+			/*
 			rc = bat returnStatus: true, script: "sfdx force:user:password:generate --targetusername ${scratchOrg}"
+			if (rc != 0) { error 'SFDX Command failed....21' }
+			println rc
+			*/
+			rc = bat returnStatus: true, script: "sfdx force:user:display --targetusername ${scratchOrg}"
 			if (rc != 0) { error 'SFDX Command failed....22' }
 			println rc
-			println 22
-			rc = bat returnStatus: true, script: "sfdx force:user:display --targetusername ${scratchOrg}"
-			if (rc != 0) { error 'SFDX Command failed....23' }
-			println rc
-			println 23
 			
+			println 'Code deployment into Scratch org ${scratchOrg} is in progress.......'
 			rc = bat returnStatus: true, script: "sfdx force:source:push -u ${scratchOrg}"
-			if (rc != 0) { error 'SFDX Command failed....4' }
+			if (rc != 0) { error 'SFDX Command failed....30' }
 			println rc
-			println 40
 			
+			println 'List of all the orgs.......'
 			rc = bat returnStatus: true, script: "sfdx force:org:list --all"
 			if (rc != 0) { error 'SFDX Command failed....4' }
 			println rc
 			println 50
 			
-			doError = '0'
 			/*		
 			def subject = "JENKINS-NOTIFICATION: : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'" 
 			
@@ -82,5 +76,5 @@ node {
 		echo "Caught: ${err}"
 		currentBuild.result = 'FAILURE'
 	}
-	step([$class: 'Mailer', recipients: 'chandra@comitydesigns.com'])
+	//step([$class: 'Mailer', recipients: 'chandra@comitydesigns.com'])
 }
