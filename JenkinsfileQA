@@ -17,21 +17,21 @@ node {
 	
 	
 	
+	println "Accessing code from git branch:...."
 	stage('checkout source') {
 		// when running in multi-branch job, one must issue this command
 		checkout scm
 	}
-	println 'Build is in progress in org: ${scratchOrg}....'
+	println "Build is in progress in org: ${scratchOrg}...."
 	withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
 		stage('Deploye Code') {
-			println 'Running on Window.......'
 			
-			println 'DevHub authentication is in progress.......'
+			println "DevHub authentication is in progress......."
 			rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
 			if (rc != 0) { error 'DevHub Org authorization failed....10' }
 			println rc
 			
-			println 'Scratch org ${scratchOrg} creation is in progress.......'
+			println "Scratch org ${scratchOrg} creation is in progress......."
 			rc = bat returnStatus: true, script: "sfdx force:org:create -s -f config/project-scratch-def.json -a ${scratchOrg}"
 			if (rc != 0) { error 'SFDX Command failed....20' }
 			println rc
@@ -40,16 +40,17 @@ node {
 			if (rc != 0) { error 'SFDX Command failed....21' }
 			println rc
 			*/
+
 			rc = bat returnStatus: true, script: "sfdx force:user:display --targetusername ${scratchOrg}"
 			if (rc != 0) { error 'SFDX Command failed....22' }
 			println rc
 			
-			println 'Code deployment into Scratch org ${scratchOrg} is in progress.......'
+			println "Code deployment into Scratch org ${scratchOrg} is in progress......."
 			rc = bat returnStatus: true, script: "sfdx force:source:push -u ${scratchOrg}"
 			if (rc != 0) { error 'SFDX Command failed....30' }
 			println rc
 			
-			println 'List of all the orgs.......'
+			println "List of all the orgs......."
 			rc = bat returnStatus: true, script: "sfdx force:org:list --all"
 			if (rc != 0) { error 'SFDX Command failed....4' }
 			println rc
